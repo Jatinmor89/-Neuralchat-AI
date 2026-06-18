@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { io } from 'socket.io-client';
 import './App.css';
 
-const SOCKET_URL = process.env.REACT_APP_SERVER_URL || 'http://localhost:4000';
+const SOCKET_URL = process.env.REACT_APP_SERVER_URL || window.location.origin;
 const MODELS = ['gpt-4o-mini', 'gpt-4o', 'gpt-3.5-turbo', 'gpt-4-turbo'];
 
 let socket;
