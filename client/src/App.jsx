@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 import './App.css';
 
 const SOCKET_URL = process.env.REACT_APP_SERVER_URL || window.location.origin;
-const MODELS = ['gpt-4o-mini', 'gpt-4o', 'gpt-3.5-turbo', 'gpt-4-turbo'];
+const MODELS = ['llama3-8b-8192', 'llama3-70b-8192', 'mixtral-8x7b-32768', 'gemma2-9b-it'];
 
 let socket;
 
@@ -19,7 +19,8 @@ export default function App() {
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
   const [streamBuffer, setStreamBuffer] = useState('');
-  const [model, setModel] = useState('gpt-4o-mini');
+  const [model, setModel] = useState('llama3-8b-8192');
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
