@@ -7,7 +7,6 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const { v4: uuidv4 } = require('uuid');
-const OpenAI = require('openai');
 
 const app = express();
 const server = http.createServer(app);
@@ -18,7 +17,12 @@ const io = new Server(server, {
   cors: { origin: CLIENT_URL, methods: ['GET', 'POST'] }
 });
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+// Groq is OpenAI-compatible — just change baseURL and use GROQ_API_KEY
+const OpenAI = require('openai');
+const groq = new OpenAI({
+  apiKey: process.env.GROQ_API_KEY,
+  baseURL: 'https://api.groq.com/openai/v1',
+});
 
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors({ origin: CLIENT_URL }));
@@ -30,7 +34,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
 }
 
-// In-memory conversation store (swap with Redis in production)
+// In-memory conversation store
 const conversations = new Map();
 
 // ── REST: get conversation history ──
@@ -73,7 +77,7 @@ if (process.env.NODE_ENV === 'production') {
 io.on('connection', (socket) => {
   console.log(`[socket] connected: ${socket.id}`);
 
-  socket.on('conversation:create', ({ model = 'gpt-4o-mini', systemPrompt } = {}) => {
+  socket.on('conversation:create', ({ model = 'llama3-8b-8192', systemPrompt } = {}) => {
     const id = uuidv4();
     const convo = {
       id,
@@ -112,7 +116,7 @@ io.on('connection', (socket) => {
 
     try {
       const activeModel = model || convo.model;
-      const stream = await openai.chat.completions.create({
+      const stream = await groq.chat.completions.create({
         model: activeModel,
         stream: true,
         messages: [
@@ -142,7 +146,7 @@ io.on('connection', (socket) => {
       socket.emit('stream:end', { messageId: assistantMsgId, message: assistantMsg });
 
     } catch (err) {
-      console.error('[openai error]', err.message);
+      console.error('[groq error]', err.message);
       socket.emit('error', { message: 'AI response failed. Check your API key.' });
     }
   });
