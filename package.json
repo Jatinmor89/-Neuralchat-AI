@@ -1,0 +1,31 @@
+{
+  "name": "neuralchat-ai",
+  "version": "1.0.0",
+  "description": "Real-time AI chat platform with streaming responses, conversation memory, and multi-model support",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js",
+    "client": "cd client && npm start",
+    "install:all": "npm install && cd client && npm install",
+    "build:client": "cd client && npm install && npm run build",
+    "build": "npm run build:client",
+    "postinstall": "cd client && npm install && npm run build"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.6.1",
+    "openai": "^4.20.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "uuid": "^9.0.0",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
