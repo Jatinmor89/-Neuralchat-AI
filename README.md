@@ -68,4 +68,4 @@ neuralchat-ai/
 
 ---
 
-Built by [Jatin](https://github.com/jatin) — 2026
+Built by [Jatin](https://github.com/jatinmor89) — 2026
